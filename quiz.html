@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Web Services Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #fdfbfb, #ebedee);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .quiz-box {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 600px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .option {
+      background-color: #f1f1f1;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin: 10px 0;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option:hover {
+      background-color: #d3eaff;
+    }
+
+    .correct {
+      background-color: #c8f7c5 !important;
+    }
+
+    .incorrect {
+      background-color: #ffbaba !important;
+    }
+
+    #nextBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-weight: bold;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-box">
+  <h2 id="question">Loading...</h2>
+  <div id="options"></div>
+  <button id="nextBtn">Next</button>
+</div>
+
+<script>
+const quizData = [
+  { question: "What does SOA stand for?", options: ["Secure Object Architecture", "Service-Oriented Architecture", "Server Oriented Application", "Software Oriented Access"], answer: 1 },
+  { question: "Which protocol is commonly used in Web Services?", options: ["FTP", "SMTP", "HTTP", "SNMP"], answer: 2 },
+  { question: "XML is used to:", options: ["Create tables", "Represent data", "Format web pages", "Design databases"], answer: 1 },
+  { question: "What is the root of all XML documents?", options: ["Header", "DOCTYPE", "Root element", "Schema"], answer: 2 },
+  { question: "Thick clients are also known as:", options: ["Web clients", "Lightweight clients", "Fat clients", "Mobile clients"], answer: 2 },
+  { question: "Which of the following is a valid XML element?", options: ["<123name>", "<name@>", "<Name1>", "<name space>"], answer: 2 },
+  { question: "The main goal of web services is to:", options: ["Create static websites", "Provide a distributed computing solution", "Design graphic UI", "Replace XML"], answer: 1 },
+  { question: "What type of architecture uses both a client and a server?", options: ["Distributed", "Mainframe", "Client-Server", "Mobile"], answer: 2 },
+  { question: "In which architecture did dumb terminals originate?", options: ["Internet architecture", "Mainframe architecture", "Mobile architecture", "Cloud architecture"], answer: 1 },
+  { question: "What is the primary benefit of using XML in Web Services?", options: ["Better speed", "Platform independence", "Lower storage", "Improved UI"], answer: 1 },
+  { question: "Thin clients primarily rely on:", options: ["Local processing", "Cloud processing", "No processing", "Server downloading"], answer: 1 },
+  { question: "Which of the following is a browser-based client?", options: ["Chrome", "Windows", "Android", "Linux"], answer: 0 },
+  { question: "XML syntax requires:", options: ["Unclosed tags", "Closing tags", "Tag numbers", "JSON compatibility"], answer: 1 },
+  { question: "The use of mobile clients increased with the emergence of:", options: ["Distributed architecture", "World Wide Web", "Smartphones", "HTML"], answer: 2 },
+  { question: "What does validation of XML refer to?", options: ["Testing style", "Checking correctness of data", "Verifying HTML", "Opening tags only"], answer: 1 },
+  { question: "Which is an advanced XML feature?", options: ["Data definition", "Data validation", "Bold tags", "JSON parsing"], answer: 1 },
+  { question: "Which industry supports Web Services widely?", options: ["Textile", "Finance", "Food", "Construction"], answer: 1 },
+  { question: "Web Services are based on:", options: ["Static linking", "Loose coupling", "Dense coding", "Object orientation only"], answer: 1 },
+  { question: "The main function of a web service is to:", options: ["Build webpages", "Send emails", "Allow communication between applications", "Compress files"], answer: 2 },
+  { question: "Which language is commonly used to define the structure of XML data?", options: ["WSDL", "XSD", "SOAP", "CSS"], answer: 1 }
+];
+
+let current = 0;
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("nextBtn");
+
+function loadQuestion() {
+  const q = quizData[current];
+  questionEl.textContent = `${current + 1}. ${q.question}`;
+  optionsEl.innerHTML = "";
+  nextBtn.style.display = "none";
+
+  q.options.forEach((opt, i) => {
+    const div = document.createElement("div");
+    div.className = "option";
+    div.textContent = opt;
+    div.addEventListener("click", () => handleAnswer(div, i));
+    optionsEl.appendChild(div);
+  });
+}
+
+function handleAnswer(selected, index) {
+  const correct = quizData[current].answer;
+  const all = document.querySelectorAll(".option");
+  all.forEach(opt => opt.style.pointerEvents = "none");
+
+  if (index === correct) {
+    selected.classList.add("correct");
+  } else {
+    selected.classList.add("incorrect");
+    all[correct].classList.add("correct");
+  }
+  nextBtn.style.display = "inline-block";
+}
+
+nextBtn.addEventListener("click", () => {
+  current++;
+  if (current < quizData.length) {
+    loadQuestion();
+  } else {
+    document.querySelector(".quiz-box").innerHTML = `<h2>🎉 You completed all ${quizData.length} questions!</h2>`;
+  }
+});
+
+loadQuestion();
+</script>
+
+</body>
+</html>
